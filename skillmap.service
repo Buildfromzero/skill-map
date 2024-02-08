@@ -1,0 +1,11 @@
+[Unit]
+Description=skillmap
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5s
+ExecStart=/var/www/skill-map/main
+
+[Install]
+WantedBy=multi-user.target
