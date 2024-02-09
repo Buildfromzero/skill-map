@@ -1,9 +1,9 @@
-export default function User() {
+export default function User({id,firstName,lastName}) {
   return (
     <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
+        <th scope="row">{id}</th>
+        <td>{firstName}</td>
+        <td>{lastName}</td>
         <td>
           <span class="badge rounded-pill text-bg-primary">Go</span>
           <span class="badge rounded-pill text-bg-secondary">Python</span>
