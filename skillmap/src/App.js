@@ -6,31 +6,31 @@ import CreateUser from './components/createUser';
 function App() {
   return (
 
-    <div class="container-fluid">
+    <div className="container-fluid">
 
-    <div class="row">
-    <div class="col gap-3">
-    <Navbar />
-    </div>
-    </div>
+        <div className="row">
+          <div className="col gap-3">
+          <Navbar />
+          </div>
+        </div>
 
-    <br/>
+        <br/>
 
-    <div class="row align-items-center">
-    <div class="col-4">
-    <CreateUser />
-    </div>
-    </div>
+        <div className="row align-items-center">
+          <div className="col-4">
+          <CreateUser />
+          </div>
+        </div>
 
-    <br/>
+        <br/>
 
-    <div class="row">
-    <div class="col">
-      <UserList />
-    </div>
-    </div>
+        <div className="row">
+          <div className="col">
+            <UserList />
+          </div>
+          </div>
 
-    <br/>
+        <br/>
 
   </div>
   );

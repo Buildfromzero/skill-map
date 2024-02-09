@@ -1,21 +1,40 @@
 export default function CreateUser() {
     function onSubmission(event){
-        console.log(event.target.elements.firstName.value)
-        console.log(event.target.elements.lastName.value)
+
+        var firstName = event.target.elements.firstName.value;
+        var lastName = event.target.elements.lastName.value;
+        console.log(firstName);
+        console.log(lastName);
+
+        fetch("https://jsonplaceholder.typicode.com/users", {
+            method: "POST",
+            body: JSON.stringify({
+                firstName,
+                lastName,
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            alert(JSON.stringify(data));
+        })
     }
     return (
       <div>
         <h3>Create User</h3>
             <form onSubmit={onSubmission}>
-                <div class="mb-3">
-                    <label class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="firstName"/>
+                <div className="mb-3">
+                    <label className="form-label">First Name</label>
+                    <input type="text" className="form-control" id="firstName"/>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lastName"/>
+                <div className="mb-3">
+                    <label className="form-label">Last Name</label>
+                    <input type="text" className="form-control" id="lastName"/>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </div>
     );
