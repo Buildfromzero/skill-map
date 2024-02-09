@@ -21,10 +21,13 @@ export default function UserList() {
 
 
         <div>
+          <br/>
             <h3>User List</h3>
 
+            <br/>
+
             <form onSubmit={reloadUserList}>
-                <button type="submit" className="btn btn-dark">Submit</button>
+                <button type="submit" className="btn btn-dark">Relod Users</button>
             </form>
 
             <br/>
