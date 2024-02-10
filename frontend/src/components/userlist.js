@@ -1,6 +1,9 @@
+import React, { useState, useEffect } from 'react';
 import User from "./user";
 
 export default function UserList() {
+
+  const [data, setData] = useState([]);
 
   function reloadUserList(event){
     console.log(event);
@@ -13,41 +16,35 @@ export default function UserList() {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+            setData(data);
             alert(JSON.stringify(data));
         })
   };
 
     return (
-
-
         <div>
           <br/>
             <h3>User List</h3>
-
             <br/>
-
-            <form onSubmit={reloadUserList}>
-                <button type="submit" className="btn btn-dark">Relod Users</button>
-            </form>
-
+            <button type="simpleQuery" className="btn btn-dark" onClick={reloadUserList}>Reload User List</button>
             <br/>
-        <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#ID</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Skills</th>
-          </tr>
-        </thead>
-        <tbody>
-          <User id="1" firstName="Tom" lastName="Victor" />
-          {/* <User />
-          <User />
-          <User />
-          <User /> */}
-        </tbody>
-      </table>
+          <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#ID</th>
+              <th scope="col">Full Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Skills</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              data.map((item)=>(
+                <User id={item.id} fullName={item.name} email={item.email} />
+              ))
+            }
+          </tbody>
+        </table>
         </div>
 
         

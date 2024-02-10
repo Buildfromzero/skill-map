@@ -24,7 +24,7 @@ func main() {
 		})
 	})
 
-	r.Use(static.Serve("/", static.LocalFile("./skillmap/build", true)))
+	r.Use(static.Serve("/", static.LocalFile("./frontend/build", true)))
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
