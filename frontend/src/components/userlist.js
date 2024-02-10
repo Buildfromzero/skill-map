@@ -7,7 +7,7 @@ export default function UserList() {
 
   function reloadUserList(event){
     console.log(event);
-    fetch("https://jsonplaceholder.typicode.com/users", {
+    fetch("http://localhost:8080/api/users", {
             method: "GET",
             headers: {
                 "Content-type": "application/json; charset=UTF-8",
