@@ -1,5 +1,6 @@
 export default function CreateUser() {
     function onSubmission(event){
+        event.preventDefault();
 
         var fullName = event.target.elements.fullName.value;
         var email = event.target.elements.email.value;

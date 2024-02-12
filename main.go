@@ -3,49 +3,30 @@ package main
 import (
 	"fmt"
 
+	"github.com/buildfromzero/skill-map/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
-type User struct {
-	ID       int    `json:"id"`
-	FullName string `json:"fullname"`
-	Email    string `json:"email"`
-}
-
 func main() {
 	fmt.Println("Skill Map")
 
-	r := gin.Default()
+	// db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	// if err != nil {
+	// 	panic("failed to connect database")
+	// }
 
-	r.Use(cors.Default())
+	// // Migrate the schema
+	// db.AutoMigrate(&user.User{})
 
-	r.GET("api/login", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "login-required-testing",
-		})
-	})
+	// db.Create(&user.User{FullName: "Tom Victor", Email: "tom@buildfromzero.com"})
 
-	r.GET("/api", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "skill-map-home-page",
-		})
-	})
+	router := gin.Default()
+	router.Use(cors.Default())
 
-	r.GET("/api/users", func(c *gin.Context) {
+	user.RegisterUserRoutes(router)
 
-		user := User{
-			ID:       1,
-			FullName: "Tom Victor",
-			Email:    "tom@builfromzero.com",
-		}
-
-		users := []User{user}
-		c.JSON(200, users)
-	})
-
-	r.Use(static.Serve("/", static.LocalFile("./frontend/build", true)))
-
-	r.Run() // listen and serve on 0.0.0.0:8080
+	router.Use(static.Serve("/", static.LocalFile("./frontend/build", true)))
+	router.Run() // listen and serve on 0.0.0.0:8080
 }
