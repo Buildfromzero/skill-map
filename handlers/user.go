@@ -1,35 +1,46 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/buildfromzero/skill-map/common"
 	"github.com/buildfromzero/skill-map/managers"
 	"github.com/gin-gonic/gin"
 )
 
-type Handler interface {
-	CreateUser(ctx *gin.Context)
-}
-
 type UserHandler struct {
-	group   string
-	manager *managers.UserManager
+	groupName   string
+	userManager *managers.UserManager
 }
 
-func NewUserHandler(manager *managers.UserManager) *UserHandler {
+func NewUserHandlerFrom(userManager *managers.UserManager) *UserHandler {
 	return &UserHandler{
-		"api/",
-		manager,
+		"api/users",
+		userManager,
 	}
 }
 
-func (userH *UserHandler) Register(r *gin.Engine) {
-	group := r.Group(userH.group)
-	group.GET("users", userH.ListAll)
+func (userHandler *UserHandler) RegisterUserApis(r *gin.Engine) {
+	userGroup := r.Group(userHandler.groupName)
+	userGroup.POST("", userHandler.Create)
 }
 
-func (userH *UserHandler) ListAll(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "ok",
-	})
+func (userHandler *UserHandler) Create(ctx *gin.Context) {
+
+	userData := common.NewUserCreationInput()
+
+	err := ctx.BindJSON(&userData)
+
+	if err != nil {
+		fmt.Println("Failed to bind data")
+	}
+
+	newUser, err := userHandler.userManager.Create(userData)
+
+	if err != nil {
+		fmt.Println("failed to create user")
+	}
+
+	ctx.JSON(http.StatusOK, newUser)
 }
