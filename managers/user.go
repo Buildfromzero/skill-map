@@ -41,6 +41,22 @@ func (userMgr *UserManager) Get(id string) (models.User, error) {
 	return user, nil
 }
 
+func (userMgr *UserManager) Update(userId string, userData *common.UserUpdateInput) (*models.User, error) {
+
+	user := models.User{}
+
+	database.DB.First(&user, userId)
+
+	// user.FullName = userData.FullName
+	// user.Email = userData.Email
+
+	// database.DB.Save(&user)
+
+	database.DB.Model(&user).Updates(models.User{FullName: userData.FullName, Email: userData.Email})
+
+	return &user, nil
+}
+
 func (userMgr *UserManager) Delete(id string) error {
 	user := models.User{}
 

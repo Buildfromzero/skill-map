@@ -27,6 +27,7 @@ func (userHandler *UserHandler) RegisterUserApis(r *gin.Engine) {
 	userGroup.GET("", userHandler.List)
 	userGroup.GET(":userid/", userHandler.Detail)
 	userGroup.DELETE(":userid/", userHandler.Delete)
+	userGroup.PATCH(":userid/", userHandler.Update)
 }
 
 func (userHandler *UserHandler) Create(ctx *gin.Context) {
@@ -98,4 +99,31 @@ func (userHandler *UserHandler) Delete(ctx *gin.Context) {
 	}
 
 	common.SuccessResponse(ctx, "Deleted user")
+}
+
+func (userHandler *UserHandler) Update(ctx *gin.Context) {
+
+	userId, ok := ctx.Params.Get("userid")
+
+	if !ok {
+		fmt.Println("invalid userid")
+	}
+
+	userData := common.NewUserUpdateInput()
+
+	err := ctx.BindJSON(&userData)
+
+	if err != nil {
+		common.BadResponse(ctx, "Failed to bind data")
+		return
+	}
+
+	user, err := userHandler.userManager.Update(userId, userData)
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to update user")
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
 }
