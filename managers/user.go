@@ -40,3 +40,11 @@ func (userMgr *UserManager) Get(id string) (models.User, error) {
 
 	return user, nil
 }
+
+func (userMgr *UserManager) Delete(id string) error {
+	user := models.User{}
+
+	database.DB.First(&user, id)
+	database.DB.Delete(&user)
+	return nil
+}
