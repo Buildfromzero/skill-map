@@ -1,4 +1,4 @@
-package database
+package storage
 
 import (
 	"github.com/buildfromzero/skill-map/models"
@@ -8,7 +8,7 @@ import (
 
 var DB *gorm.DB
 
-func Initialize() {
+func InitializeDatabase() {
 	var err error
 	DB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
