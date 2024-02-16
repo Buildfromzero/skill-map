@@ -32,3 +32,11 @@ func (userMgr *UserManager) List() ([]models.User, error) {
 	database.DB.Find(&users)
 	return users, nil
 }
+
+func (userMgr *UserManager) Get(id string) (models.User, error) {
+	user := models.User{}
+
+	database.DB.First(&user, id)
+
+	return user, nil
+}

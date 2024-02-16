@@ -25,6 +25,7 @@ func (userHandler *UserHandler) RegisterUserApis(r *gin.Engine) {
 	userGroup := r.Group(userHandler.groupName)
 	userGroup.POST("", userHandler.Create)
 	userGroup.GET("", userHandler.List)
+	userGroup.GET(":userid/", userHandler.Detail)
 }
 
 func (userHandler *UserHandler) Create(ctx *gin.Context) {
@@ -45,6 +46,7 @@ func (userHandler *UserHandler) Create(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, newUser)
 }
+
 func (userHandler *UserHandler) List(ctx *gin.Context) {
 
 	allUsers, err := userHandler.userManager.List()
@@ -54,4 +56,20 @@ func (userHandler *UserHandler) List(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, allUsers)
+}
+
+func (userHandler *UserHandler) Detail(ctx *gin.Context) {
+
+	userId, ok := ctx.Params.Get("userid")
+
+	if !ok {
+		fmt.Println("invalid userid")
+	}
+	user, err := userHandler.userManager.Get(userId)
+
+	if err != nil {
+		fmt.Println("failed to get user")
+	}
+
+	ctx.JSON(http.StatusOK, user)
 }
