@@ -4,21 +4,30 @@ import (
 	"errors"
 
 	"github.com/buildfromzero/skill-map/common"
-	"github.com/buildfromzero/skill-map/database"
 	"github.com/buildfromzero/skill-map/models"
+	"github.com/buildfromzero/skill-map/storage"
 )
 
-type UserManager struct {
+type UserManager interface {
+	Create(userData *common.UserCreationInput) (*models.User, error)
+	List() ([]models.User, error)
+	Get(id string) (models.User, error)
+	Update(userId string, userData *common.UserUpdateInput) (*models.User, error)
+	Delete(id string) error
+}
+
+type userManager struct {
+	// DatabaseDriver
 	// dbClient
 }
 
-func NewUserManager() *UserManager {
-	return &UserManager{}
+func NewUserManager() UserManager {
+	return &userManager{}
 }
 
-func (userMgr *UserManager) Create(userData *common.UserCreationInput) (*models.User, error) {
+func (userMgr *userManager) Create(userData *common.UserCreationInput) (*models.User, error) {
 	newUser := &models.User{FullName: userData.FullName, Email: userData.Email}
-	database.DB.Create(newUser)
+	storage.DB.Create(newUser)
 
 	if newUser.ID == 0 {
 		return nil, errors.New("user creation failed")
@@ -27,40 +36,34 @@ func (userMgr *UserManager) Create(userData *common.UserCreationInput) (*models.
 	return newUser, nil
 }
 
-func (userMgr *UserManager) List() ([]models.User, error) {
+func (userMgr *userManager) List() ([]models.User, error) {
 	users := []models.User{}
-	database.DB.Find(&users)
+	storage.DB.Find(&users)
 	return users, nil
 }
 
-func (userMgr *UserManager) Get(id string) (models.User, error) {
+func (userMgr *userManager) Get(id string) (models.User, error) {
 	user := models.User{}
 
-	database.DB.First(&user, id)
+	storage.DB.First(&user, id)
 
 	return user, nil
 }
 
-func (userMgr *UserManager) Update(userId string, userData *common.UserUpdateInput) (*models.User, error) {
+func (userMgr *userManager) Update(userId string, userData *common.UserUpdateInput) (*models.User, error) {
 
 	user := models.User{}
 
-	database.DB.First(&user, userId)
-
-	// user.FullName = userData.FullName
-	// user.Email = userData.Email
-
-	// database.DB.Save(&user)
-
-	database.DB.Model(&user).Updates(models.User{FullName: userData.FullName, Email: userData.Email})
+	storage.DB.First(&user, userId)
+	storage.DB.Model(&user).Updates(models.User{FullName: userData.FullName, Email: userData.Email})
 
 	return &user, nil
 }
 
-func (userMgr *UserManager) Delete(id string) error {
+func (userMgr *userManager) Delete(id string) error {
 	user := models.User{}
 
-	database.DB.First(&user, id)
-	database.DB.Delete(&user)
+	storage.DB.First(&user, id)
+	storage.DB.Delete(&user)
 	return nil
 }

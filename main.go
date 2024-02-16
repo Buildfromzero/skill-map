@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 
-	"github.com/buildfromzero/skill-map/database"
 	"github.com/buildfromzero/skill-map/handlers"
 	"github.com/buildfromzero/skill-map/managers"
+	"github.com/buildfromzero/skill-map/storage"
 	"github.com/gin-gonic/gin"
 )
 
 func init() {
-	database.Initialize()
+	storage.InitializeDatabase()
 }
 
 func main() {

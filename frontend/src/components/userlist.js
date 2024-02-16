@@ -7,7 +7,7 @@ export default function UserList() {
 
   function reloadUserList(event){
     console.log(event);
-    fetch("http://localhost:8080/api/users", {
+    fetch("http://localhost:8080/api/users/", {
             method: "GET",
             headers: {
                 "Content-type": "application/json; charset=UTF-8",
@@ -40,7 +40,7 @@ export default function UserList() {
           <tbody>
             {
               data.map((item)=>(
-                <User id={item.id} fullName={item.name} email={item.email} />
+                <User id={item.id} fullName={item.fullName} email={item.email} />
               ))
             }
           </tbody>

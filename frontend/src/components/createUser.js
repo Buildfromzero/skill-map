@@ -7,11 +7,11 @@ export default function CreateUser() {
         console.log(fullName);
         console.log(email);
 
-        fetch("https://jsonplaceholder.typicode.com/users", {
+        fetch("http://localhost:8080/api/users/", {
             method: "POST",
             body: JSON.stringify({
-                fullName,
-                email,
+                "fullName":fullName,
+                "email":email,
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8",
