@@ -1,6 +1,6 @@
 import UserList from '../components/userList';
 import Navbar from '../components/navbar';
-import CreateUser from '../components/createUser';
+import CreateUser from '../components/userCreate';
 
 function UserPage() {
     return (

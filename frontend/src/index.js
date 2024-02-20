@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import '@floating-ui/react';
 import Home from './routes/home';
@@ -14,6 +13,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import SkillPage from './routes/skills';
+import UserDetail from './components/userDetail';
 
 
 const router = createBrowserRouter([
@@ -26,6 +26,12 @@ const router = createBrowserRouter([
   {
     path: "/users",
     element: <UserPage />,
+    errorElement: <ErrorPage />,
+  },
+
+  {
+    path: "/users/:userId",
+    element: <UserDetail />,
     errorElement: <ErrorPage />,
   },
   {

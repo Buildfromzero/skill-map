@@ -1,8 +1,7 @@
 import Navbar from '../components/navbar';
-import SkillList from '../components/skillList';
-import CreateSkill from '../components/skillCreate';
+import UpdateUser from '../components/userUpdate';
 
-function SkillPage() {
+function UserPage() {
     return (
 
         <div className="container-fluid">
@@ -18,7 +17,7 @@ function SkillPage() {
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="users">Skills</li>
+                    <li class="breadcrumb-item active" aria-current="users">Users</li>
                 </ol>
             </nav>
 
@@ -26,21 +25,14 @@ function SkillPage() {
 
             <div className="row align-items-center">
                 <div className="col-4">
-                    <CreateSkill />
+                    <UpdateUser />
                 </div>
             </div>
 
-            <br />
-
-            <div className="row">
-                <div className="col">
-                    <SkillList />
-                </div>
-            </div>
 
             <br />
         </div>
     );
 }
 
-export default SkillPage;
+export default UserPage;
