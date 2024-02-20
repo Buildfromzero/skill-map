@@ -7,7 +7,7 @@ export default function UserList() {
 
   function reloadUserList(event) {
     // console.log(event);
-    fetch("http://localhost:8080/api/users", {
+    fetch("http://localhost:8080/api/users/", {
       method: "GET",
     })
       .then(response => response.json())
