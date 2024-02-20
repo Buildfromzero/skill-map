@@ -22,11 +22,7 @@ export default function UserDetail() {
             body: JSON.stringify({
                 "fullName": fullName,
                 "email": email,
-            }),
-            // headers: {
-            //     "Content-type": "application/json; charset=UTF-8",
-            //     "Origin": "localhost"
-            // },
+            })
         })
             .then(response => response.json())
             .then(data => {
