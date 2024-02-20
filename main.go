@@ -6,7 +6,7 @@ import (
 	"github.com/buildfromzero/skill-map/handlers"
 	"github.com/buildfromzero/skill-map/managers"
 	"github.com/buildfromzero/skill-map/storage"
-	"github.com/gin-gonic/contrib/cors"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 

@@ -16,7 +16,7 @@ type UserHandler struct {
 
 func NewUserHandlerFrom(userManager managers.UserManager) *UserHandler {
 	return &UserHandler{
-		"api/users",
+		"api/users/",
 		userManager,
 	}
 }
@@ -24,8 +24,8 @@ func NewUserHandlerFrom(userManager managers.UserManager) *UserHandler {
 func (handler *UserHandler) RegisterUserApis(r *gin.Engine) {
 	userGroup := r.Group(handler.groupName)
 
-	userGroup.POST("", handler.Create)
 	userGroup.GET("", handler.List)
+	userGroup.POST("", handler.Create)
 	userGroup.GET(":userid/", handler.Detail)
 	userGroup.DELETE(":userid/", handler.Delete)
 	userGroup.PATCH(":userid/", handler.Update)
