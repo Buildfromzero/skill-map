@@ -7,17 +7,14 @@ export default function UserList() {
 
   function reloadUserList(event){
     console.log(event);
-    fetch("http://localhost:8080/api/users/", {
+    fetch("http://localhost:8080/api/users", {
             method: "GET",
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-            },
         })
         .then(response => response.json())
         .then(data => {
             console.log(data);
             setData(data);
-            alert(JSON.stringify(data));
+            // alert(JSON.stringify(data));
         })
   };
 
