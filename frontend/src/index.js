@@ -13,7 +13,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import SkillPage from './routes/skills';
-import UserDetail from './components/userDetail';
+import UserDetail from './routes/userDetail';
 
 
 const router = createBrowserRouter([

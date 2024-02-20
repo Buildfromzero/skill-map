@@ -6,7 +6,7 @@ export default function UserList() {
   const [data, setData] = useState([]);
 
   function reloadUserList(event) {
-    console.log(event);
+    // console.log(event);
     fetch("http://localhost:8080/api/users", {
       method: "GET",
     })
@@ -17,6 +17,11 @@ export default function UserList() {
         // alert(JSON.stringify(data));
       })
   };
+
+  useEffect(() => {
+    console.log("effects");
+    reloadUserList(null);
+  }, [])
 
   return (
     <div>
