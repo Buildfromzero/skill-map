@@ -2,13 +2,49 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import App from './App';
+import '@floating-ui/react';
+import Home from './routes/home';
+import UserLogin from './routes/login';
 import reportWebVitals from './reportWebVitals';
+import ErrorPage from "./routes/error-pages";
+import UserPage from './routes/users';
+
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import SkillPage from './routes/skills';
+
+
+const router = createBrowserRouter([
+
+  {
+    path: "/",
+    element: <Home />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/users",
+    element: <UserPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/skills",
+    element: <SkillPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/login",
+    element: <UserLogin />,
+    errorElement: <ErrorPage />,
+  },
+]);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
