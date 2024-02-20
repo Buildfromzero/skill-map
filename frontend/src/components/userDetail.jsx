@@ -36,12 +36,13 @@ export default function UserDetail() {
         fetch(usetDetailApi, {
             method: "GET",
         })
-            .then(response => response.json())
+            .then(response => {
+                return response.json();
+            })
             .then(data => {
                 console.log(data);
                 setData(data);
             })
-
     }
 
     function deleteUser(event) {
@@ -50,10 +51,13 @@ export default function UserDetail() {
         fetch(usetDetailApi, {
             method: "DELETE",
         })
-            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                return response.json();
+            })
             .then(data => {
                 console.log(data);
-                setData(data);
+                alert(JSON.stringify(data));
             })
     }
 
@@ -62,7 +66,6 @@ export default function UserDetail() {
         getUserDetails();
 
     }, [])
-
 
     return (
         <div>
