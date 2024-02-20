@@ -6,6 +6,7 @@ import (
 	"github.com/buildfromzero/skill-map/handlers"
 	"github.com/buildfromzero/skill-map/managers"
 	"github.com/buildfromzero/skill-map/storage"
+	"github.com/gin-gonic/contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +18,8 @@ func main() {
 	fmt.Println("Skill Map")
 
 	router := gin.Default()
+
+	router.Use(cors.Default())
 
 	userManger := managers.NewUserManager()
 	userHandler := handlers.NewUserHandlerFrom(userManger)

@@ -7,15 +7,15 @@ export default function CreateUser() {
         console.log(fullName);
         console.log(email);
 
-        fetch("http://localhost:8080/api/users/", {
+        fetch("http://localhost:8080/api/users", {
             method: "POST",
             body: JSON.stringify({
                 "fullName":fullName,
                 "email":email,
             }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-            },
+            // headers: {
+            //     "Content-type": "application/json; charset=UTF-8",
+            // },
         })
         .then(response => response.json())
         .then(data => {
