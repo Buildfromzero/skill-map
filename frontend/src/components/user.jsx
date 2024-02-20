@@ -1,8 +1,16 @@
+import { Link } from 'react-router-dom';
+
+
 export default function User({ id, fullName, email }) {
   return (
     <tr>
-      <th scope="row">{id}</th>
-      <td>{fullName}</td>
+      <th scope="row">
+        <Link to={`/users/${id}`}>{id}</Link>
+      </th>
+      <td>
+
+        <Link to={`/users/${id}`}>{fullName}</Link>
+      </td>
       <td>{email}</td>
       <td>
         <span class="badge rounded-pill text-bg-primary">Go</span>
