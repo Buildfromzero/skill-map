@@ -1,7 +1,7 @@
 # skill-map
 
 
-## Part 1 - Initital setup and server setup
+## Part 1 - Initial setup and server setup
 * [YouTube Tutorial Link](https://youtu.be/pHtohACmyj8?si=JwZHSdzFwHd8uAMB)
 * [Source Code Link](https://github.com/Buildfromzero/skill-map/tree/v0.0.1)
  
