@@ -17,3 +17,7 @@ type UserSkillRank struct {
 	Skill     Skill
 	Rank      uint `json:"rank"`
 }
+
+func NewUserSkillRank() *UserSkillRank {
+	return &UserSkillRank{}
+}
