@@ -23,15 +23,21 @@ func NewSkillHandlerFrom(skillManager managers.SkillManager) *SkillHandler {
 
 func (handler *SkillHandler) RegisterApis(r *gin.Engine) {
 	skillGroup := r.Group(handler.groupName)
-
-	skillGroup.GET("skills/", handler.List)
-	skillGroup.POST("skills/", handler.Create)
-	skillGroup.GET("skills/:skillid/", handler.Detail)
-	skillGroup.DELETE("skills/:skillid/", handler.Delete)
-	skillGroup.PATCH("skills/:skillid/", handler.Update)
+	// skill apis
+	skillGroup.GET("skills/", handler.ListSkills)
+	skillGroup.POST("skills/", handler.CreateSkill)
+	skillGroup.GET("skills/:skillid/", handler.SkillDetail)
+	skillGroup.DELETE("skills/:skillid/", handler.DeleteSkill)
+	skillGroup.PATCH("skills/:skillid/", handler.UpdateSkill)
+	// skill group apis
+	skillGroup.GET("skill-groups/", handler.ListSkillGroups)
+	skillGroup.POST("skill-groups/", handler.CreateSkillGroup)
+	skillGroup.GET("skill-groups/:groupid/", handler.SkillGroupDetail)
+	skillGroup.DELETE("skill-groups/:groupid/", handler.DeleteSkillGroup)
+	skillGroup.PATCH("skill-groups/:groupid/", handler.UpdateSkillGroup)
 }
 
-func (handler *SkillHandler) Create(ctx *gin.Context) {
+func (handler *SkillHandler) CreateSkill(ctx *gin.Context) {
 
 	inputData := common.NewSkillCreationInput()
 
@@ -45,14 +51,14 @@ func (handler *SkillHandler) Create(ctx *gin.Context) {
 	newSkill, err := handler.skillManager.Create(inputData)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to create user")
+		common.BadResponse(ctx, "failed to create skill")
 		return
 	}
 
 	ctx.JSON(http.StatusOK, newSkill)
 }
 
-func (handler *SkillHandler) List(ctx *gin.Context) {
+func (handler *SkillHandler) ListSkills(ctx *gin.Context) {
 
 	allSkills, err := handler.skillManager.List()
 
@@ -64,7 +70,7 @@ func (handler *SkillHandler) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, allSkills)
 }
 
-func (handler *SkillHandler) Detail(ctx *gin.Context) {
+func (handler *SkillHandler) SkillDetail(ctx *gin.Context) {
 
 	skillId, ok := ctx.Params.Get("skillid")
 
@@ -85,7 +91,7 @@ func (handler *SkillHandler) Detail(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, skill)
 }
 
-func (handler *SkillHandler) Delete(ctx *gin.Context) {
+func (handler *SkillHandler) DeleteSkill(ctx *gin.Context) {
 
 	skillId, ok := ctx.Params.Get("skillid")
 
@@ -101,7 +107,7 @@ func (handler *SkillHandler) Delete(ctx *gin.Context) {
 	common.SuccessResponse(ctx, "deleted Skill")
 }
 
-func (handler *SkillHandler) Update(ctx *gin.Context) {
+func (handler *SkillHandler) UpdateSkill(ctx *gin.Context) {
 
 	skillId, ok := ctx.Params.Get("skillid")
 
@@ -118,12 +124,109 @@ func (handler *SkillHandler) Update(ctx *gin.Context) {
 		return
 	}
 
-	user, err := handler.skillManager.Update(skillId, inputData)
+	skill, err := handler.skillManager.Update(skillId, inputData)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to update user")
+		common.BadResponse(ctx, "failed to update skill")
 		return
 	}
 
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, skill)
+}
+
+func (handler *SkillHandler) CreateSkillGroup(ctx *gin.Context) {
+
+	inputData := common.NewSkillGroupCreationInput()
+
+	err := ctx.BindJSON(&inputData)
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to bind data")
+		return
+	}
+
+	newSkillGroup, err := handler.skillManager.CreateGroup(inputData)
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to create Skill Group")
+		return
+	}
+
+	ctx.JSON(http.StatusOK, newSkillGroup)
+}
+
+func (handler *SkillHandler) ListSkillGroups(ctx *gin.Context) {
+
+	skillGroups, err := handler.skillManager.ListGroup()
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to get all Skill Groups")
+		return
+	}
+
+	ctx.JSON(http.StatusOK, skillGroups)
+}
+
+func (handler *SkillHandler) SkillGroupDetail(ctx *gin.Context) {
+
+	groupId, ok := ctx.Params.Get("groupid")
+
+	if !ok {
+		fmt.Println("invalid group id")
+	}
+	skillGroup, err := handler.skillManager.GetGroup(groupId)
+
+	if skillGroup.ID == 0 {
+		common.BadResponse(ctx, "no group present with given id")
+		return
+	}
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to get Skill Group")
+	}
+
+	ctx.JSON(http.StatusOK, skillGroup)
+}
+
+func (handler *SkillHandler) DeleteSkillGroup(ctx *gin.Context) {
+
+	groupId, ok := ctx.Params.Get("groupid")
+
+	if !ok {
+		common.BadResponse(ctx, "invalid Group id")
+	}
+	err := handler.skillManager.DeleteGroup(groupId)
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to delete Skill Group")
+	}
+
+	common.SuccessResponse(ctx, "deleted Skill Group")
+}
+
+func (handler *SkillHandler) UpdateSkillGroup(ctx *gin.Context) {
+
+	groupId, ok := ctx.Params.Get("groupid")
+
+	if !ok {
+		common.BadResponse(ctx, "failed to get group id")
+	}
+
+	inputData := common.NewSkillGroupUpdateInput()
+
+	err := ctx.BindJSON(&inputData)
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to bind data")
+		return
+	}
+
+	skillGroup, err := handler.skillManager.UpdateGroup(groupId, inputData)
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to update Skill Group")
+		return
+	}
+
+	ctx.JSON(http.StatusOK, skillGroup)
 }

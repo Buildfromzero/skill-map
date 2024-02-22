@@ -9,11 +9,18 @@ import (
 )
 
 type SkillManager interface {
+	// Skill
 	Create(inputData *common.SkillCreationInput) (*models.Skill, error)
 	List() ([]models.Skill, error)
 	Get(id string) (models.Skill, error)
 	Update(id string, inputData *common.SkillUpdateInput) (*models.Skill, error)
 	Delete(id string) error
+	// Skill Group
+	CreateGroup(inputData *common.SkillGroupCreationInput) (*models.SkillGroup, error)
+	ListGroup() ([]models.SkillGroup, error)
+	GetGroup(id string) (models.SkillGroup, error)
+	UpdateGroup(id string, inputData *common.SkillGroupUpdateInput) (*models.SkillGroup, error)
+	DeleteGroup(id string) error
 }
 
 type skillManager struct {
