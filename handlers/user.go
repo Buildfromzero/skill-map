@@ -21,7 +21,7 @@ func NewUserHandlerFrom(userManager managers.UserManager) *UserHandler {
 	}
 }
 
-func (handler *UserHandler) RegisterUserApis(r *gin.Engine) {
+func (handler *UserHandler) RegisterEndpoints(r *gin.Engine) {
 	userGroup := r.Group(handler.groupName)
 
 	userGroup.GET("", handler.ListUser)

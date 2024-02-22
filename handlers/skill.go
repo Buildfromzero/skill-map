@@ -21,7 +21,7 @@ func NewSkillHandlerFrom(skillManager managers.SkillManager) *SkillHandler {
 	}
 }
 
-func (handler *SkillHandler) RegisterApis(r *gin.Engine) {
+func (handler *SkillHandler) RegisterEndpoints(r *gin.Engine) {
 	skillGroup := r.Group(handler.groupName)
 	// skill apis
 	skillGroup.GET("skills/", handler.ListSkills)
