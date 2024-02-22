@@ -13,7 +13,8 @@ type SkillGroupCreationInput struct {
 }
 
 type SkillGroupUpdateInput struct {
-	Name string `json:"name"`
+	Name   string `json:"name"`
+	Skills []int  `json:"skills"`
 }
 
 func NewSkillCreationInput() *SkillCreationInput {
