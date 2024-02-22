@@ -21,24 +21,24 @@ func NewUserHandlerFrom(userManager managers.UserManager) *UserHandler {
 	}
 }
 
-func (handler *UserHandler) RegisterUserApis(r *gin.Engine) {
+func (handler *UserHandler) RegisterEndpoints(r *gin.Engine) {
 	userGroup := r.Group(handler.groupName)
 
-	userGroup.GET("", handler.List)
-	userGroup.POST("", handler.Create)
-	userGroup.GET(":userid/", handler.Detail)
-	userGroup.DELETE(":userid/", handler.Delete)
-	userGroup.PATCH(":userid/", handler.Update)
+	userGroup.GET("", handler.ListUser)
+	userGroup.POST("", handler.CreateUser)
+	userGroup.GET(":userid/", handler.UserDetail)
+	userGroup.DELETE(":userid/", handler.DeleteUser)
+	userGroup.PATCH(":userid/", handler.UpdateUser)
 }
 
-func (handler *UserHandler) Create(ctx *gin.Context) {
+func (handler *UserHandler) CreateUser(ctx *gin.Context) {
 
 	userData := common.NewUserCreationInput()
 
 	err := ctx.BindJSON(&userData)
 
 	if err != nil {
-		common.BadResponse(ctx, "Failed to bind data")
+		common.BadResponse(ctx, "failed to bind data")
 		return
 	}
 
@@ -52,7 +52,7 @@ func (handler *UserHandler) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, newUser)
 }
 
-func (handler *UserHandler) List(ctx *gin.Context) {
+func (handler *UserHandler) ListUser(ctx *gin.Context) {
 
 	allUsers, err := handler.userManager.List()
 
@@ -64,49 +64,49 @@ func (handler *UserHandler) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, allUsers)
 }
 
-func (handler *UserHandler) Detail(ctx *gin.Context) {
+func (handler *UserHandler) UserDetail(ctx *gin.Context) {
 
 	userId, ok := ctx.Params.Get("userid")
 
 	if !ok {
 		fmt.Println("invalid userid")
+		return
 	}
 	user, err := handler.userManager.Get(userId)
 
-	if user.ID == 0 {
-		common.BadResponse(ctx, "no user present")
-		return
-	}
-
 	if err != nil {
-		common.BadResponse(ctx, "failed to get user")
+		common.BadResponse(ctx, err.Error())
+		return
 	}
 
 	ctx.JSON(http.StatusOK, user)
 }
 
-func (handler *UserHandler) Delete(ctx *gin.Context) {
+func (handler *UserHandler) DeleteUser(ctx *gin.Context) {
 
 	userId, ok := ctx.Params.Get("userid")
 
 	if !ok {
 		common.BadResponse(ctx, "invalid userid")
+		return
 	}
 	err := handler.userManager.Delete(userId)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to delete user")
+		common.BadResponse(ctx, err.Error())
+		return
 	}
 
 	common.SuccessResponse(ctx, "Deleted user")
 }
 
-func (handler *UserHandler) Update(ctx *gin.Context) {
+func (handler *UserHandler) UpdateUser(ctx *gin.Context) {
 
 	userId, ok := ctx.Params.Get("userid")
 
 	if !ok {
 		common.BadResponse(ctx, "failed to delete user")
+		return
 	}
 
 	userData := common.NewUserUpdateInput()
@@ -121,7 +121,7 @@ func (handler *UserHandler) Update(ctx *gin.Context) {
 	user, err := handler.userManager.Update(userId, userData)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to update user")
+		common.BadResponse(ctx, err.Error())
 		return
 	}
 

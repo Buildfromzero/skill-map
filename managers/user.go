@@ -11,7 +11,7 @@ import (
 type UserManager interface {
 	Create(userData *common.UserCreationInput) (*models.User, error)
 	List() ([]models.User, error)
-	Get(id string) (models.User, error)
+	Get(id string) (*models.User, error)
 	Update(userId string, userData *common.UserUpdateInput) (*models.User, error)
 	Delete(id string) error
 }
@@ -42,10 +42,13 @@ func (userMgr *userManager) List() ([]models.User, error) {
 	return users, nil
 }
 
-func (userMgr *userManager) Get(id string) (models.User, error) {
-	user := models.User{}
+func (userMgr *userManager) Get(id string) (*models.User, error) {
+	user := &models.User{}
 
 	storage.DB.First(&user, id)
+	if user.ID == 0 {
+		return nil, errors.New("no user found")
+	}
 
 	return user, nil
 }
@@ -55,6 +58,11 @@ func (userMgr *userManager) Update(userId string, userData *common.UserUpdateInp
 	user := models.User{}
 
 	storage.DB.First(&user, userId)
+
+	if user.ID == 0 {
+		return nil, errors.New("no user found")
+	}
+
 	storage.DB.Model(&user).Updates(models.User{FullName: userData.FullName, Email: userData.Email})
 
 	return &user, nil
@@ -64,6 +72,11 @@ func (userMgr *userManager) Delete(id string) error {
 	user := models.User{}
 
 	storage.DB.First(&user, id)
+
+	if user.ID == 0 {
+		return errors.New("no user found")
+	}
+
 	storage.DB.Delete(&user)
 	return nil
 }

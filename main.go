@@ -15,15 +15,19 @@ func init() {
 }
 
 func main() {
-	fmt.Println("Skill Map")
+	fmt.Println("Stating Skill Map...")
 
 	router := gin.Default()
-
 	router.Use(cors.Default())
 
 	userManger := managers.NewUserManager()
+	skillManger := managers.NewSkillManager()
+
 	userHandler := handlers.NewUserHandlerFrom(userManger)
-	userHandler.RegisterUserApis(router)
+	userHandler.RegisterEndpoints(router)
+
+	skillHandler := handlers.NewSkillHandlerFrom(skillManger)
+	skillHandler.RegisterEndpoints(router)
 
 	router.Run() // listen and serve on 0.0.0.0:8080
 }
