@@ -73,13 +73,8 @@ func (handler *UserHandler) UserDetail(ctx *gin.Context) {
 	}
 	user, err := handler.userManager.Get(userId)
 
-	if user.ID == 0 {
-		common.BadResponse(ctx, "no user present")
-		return
-	}
-
 	if err != nil {
-		common.BadResponse(ctx, "failed to get user")
+		common.BadResponse(ctx, err.Error())
 	}
 
 	ctx.JSON(http.StatusOK, user)
@@ -95,7 +90,7 @@ func (handler *UserHandler) DeleteUser(ctx *gin.Context) {
 	err := handler.userManager.Delete(userId)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to delete user")
+		common.BadResponse(ctx, err.Error())
 	}
 
 	common.SuccessResponse(ctx, "Deleted user")
@@ -121,7 +116,7 @@ func (handler *UserHandler) UpdateUser(ctx *gin.Context) {
 	user, err := handler.userManager.Update(userId, userData)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to update user")
+		common.BadResponse(ctx, err.Error())
 		return
 	}
 
