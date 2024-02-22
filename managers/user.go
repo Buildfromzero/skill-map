@@ -43,7 +43,7 @@ func (userMgr *userManager) List() ([]models.User, error) {
 }
 
 func (userMgr *userManager) Get(id string) (*models.User, error) {
-	user := &models.User{}
+	user := models.NewUser()
 
 	storage.DB.First(&user, id)
 	if user.ID == 0 {
@@ -55,9 +55,9 @@ func (userMgr *userManager) Get(id string) (*models.User, error) {
 
 func (userMgr *userManager) Update(userId string, userData *common.UserUpdateInput) (*models.User, error) {
 
-	user := models.User{}
+	user := models.NewUser()
 
-	storage.DB.First(&user, userId)
+	storage.DB.First(user, userId)
 
 	if user.ID == 0 {
 		return nil, errors.New("no user found")
@@ -65,18 +65,18 @@ func (userMgr *userManager) Update(userId string, userData *common.UserUpdateInp
 
 	storage.DB.Model(&user).Updates(models.User{FullName: userData.FullName, Email: userData.Email})
 
-	return &user, nil
+	return user, nil
 }
 
 func (userMgr *userManager) Delete(id string) error {
-	user := models.User{}
+	user := models.NewUser()
 
-	storage.DB.First(&user, id)
+	storage.DB.First(user, id)
 
 	if user.ID == 0 {
 		return errors.New("no user found")
 	}
 
-	storage.DB.Delete(&user)
+	storage.DB.Delete(user)
 	return nil
 }

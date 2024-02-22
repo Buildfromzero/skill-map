@@ -15,3 +15,7 @@ type User struct {
 	FullName  string         `json:"fullName"`
 	Email     string         `json:"email"`
 }
+
+func NewUser() *User {
+	return &User{}
+}
