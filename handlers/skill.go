@@ -80,13 +80,9 @@ func (handler *SkillHandler) SkillDetail(ctx *gin.Context) {
 	}
 	skill, err := handler.skillManager.Get(skillId)
 
-	if skill.ID == 0 {
-		common.BadResponse(ctx, "no skill present")
-		return
-	}
-
 	if err != nil {
 		common.BadResponse(ctx, "failed to get skill")
+		return
 	}
 
 	ctx.JSON(http.StatusOK, skill)
@@ -116,6 +112,7 @@ func (handler *SkillHandler) UpdateSkill(ctx *gin.Context) {
 
 	if !ok {
 		common.BadResponse(ctx, "failed to delete skill")
+		return
 	}
 
 	inputData := common.NewSkillUpdateInput()
@@ -176,16 +173,13 @@ func (handler *SkillHandler) SkillGroupDetail(ctx *gin.Context) {
 
 	if !ok {
 		fmt.Println("invalid group id")
+		return
 	}
 	skillGroup, err := handler.skillManager.GetGroup(groupId)
 
-	if skillGroup.ID == 0 {
-		common.BadResponse(ctx, "no group present with given id")
-		return
-	}
-
 	if err != nil {
 		common.BadResponse(ctx, "failed to get Skill Group")
+		return
 	}
 
 	ctx.JSON(http.StatusOK, skillGroup)
@@ -197,6 +191,7 @@ func (handler *SkillHandler) DeleteSkillGroup(ctx *gin.Context) {
 
 	if !ok {
 		common.BadResponse(ctx, "invalid Group id")
+		return
 	}
 	err := handler.skillManager.DeleteGroup(groupId)
 
@@ -214,6 +209,7 @@ func (handler *SkillHandler) UpdateSkillGroup(ctx *gin.Context) {
 
 	if !ok {
 		common.BadResponse(ctx, "failed to get group id")
+		return
 	}
 
 	inputData := common.NewSkillGroupUpdateInput()

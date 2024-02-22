@@ -12,7 +12,7 @@ type SkillManager interface {
 	// Skill
 	Create(inputData *common.SkillCreationInput) (*models.Skill, error)
 	List() ([]models.Skill, error)
-	Get(id string) (models.Skill, error)
+	Get(id string) (*models.Skill, error)
 	Update(id string, inputData *common.SkillUpdateInput) (*models.Skill, error)
 	Delete(id string) error
 	// Skill Group
@@ -51,10 +51,14 @@ func (skillMgr *skillManager) List() ([]models.Skill, error) {
 	return skillObj, nil
 }
 
-func (skillMgr *skillManager) Get(id string) (models.Skill, error) {
-	skillObj := models.Skill{}
+func (skillMgr *skillManager) Get(id string) (*models.Skill, error) {
+	skillObj := &models.Skill{}
 
 	storage.DB.First(&skillObj, id)
+
+	if skillObj.ID == 0 {
+		return nil, errors.New("no skill found")
+	}
 
 	return skillObj, nil
 }

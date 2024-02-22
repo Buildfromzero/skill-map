@@ -70,11 +70,13 @@ func (handler *UserHandler) UserDetail(ctx *gin.Context) {
 
 	if !ok {
 		fmt.Println("invalid userid")
+		return
 	}
 	user, err := handler.userManager.Get(userId)
 
 	if err != nil {
 		common.BadResponse(ctx, err.Error())
+		return
 	}
 
 	ctx.JSON(http.StatusOK, user)
@@ -86,11 +88,13 @@ func (handler *UserHandler) DeleteUser(ctx *gin.Context) {
 
 	if !ok {
 		common.BadResponse(ctx, "invalid userid")
+		return
 	}
 	err := handler.userManager.Delete(userId)
 
 	if err != nil {
 		common.BadResponse(ctx, err.Error())
+		return
 	}
 
 	common.SuccessResponse(ctx, "Deleted user")
@@ -102,6 +106,7 @@ func (handler *UserHandler) UpdateUser(ctx *gin.Context) {
 
 	if !ok {
 		common.BadResponse(ctx, "failed to delete user")
+		return
 	}
 
 	userData := common.NewUserUpdateInput()
