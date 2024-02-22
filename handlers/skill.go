@@ -76,6 +76,7 @@ func (handler *SkillHandler) SkillDetail(ctx *gin.Context) {
 
 	if !ok {
 		fmt.Println("invalid skill id")
+		return
 	}
 	skill, err := handler.skillManager.Get(skillId)
 
@@ -97,11 +98,13 @@ func (handler *SkillHandler) DeleteSkill(ctx *gin.Context) {
 
 	if !ok {
 		common.BadResponse(ctx, "invalid userid")
+		return
 	}
 	err := handler.skillManager.Delete(skillId)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to delete skill")
+		common.BadResponse(ctx, err.Error())
+		return
 	}
 
 	common.SuccessResponse(ctx, "deleted Skill")
@@ -198,7 +201,8 @@ func (handler *SkillHandler) DeleteSkillGroup(ctx *gin.Context) {
 	err := handler.skillManager.DeleteGroup(groupId)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to delete Skill Group")
+		common.BadResponse(ctx, err.Error())
+		return
 	}
 
 	common.SuccessResponse(ctx, "deleted Skill Group")
@@ -217,7 +221,7 @@ func (handler *SkillHandler) UpdateSkillGroup(ctx *gin.Context) {
 	err := ctx.BindJSON(&inputData)
 
 	if err != nil {
-		common.BadResponse(ctx, "failed to bind data")
+		common.BadResponse(ctx, err.Error())
 		return
 	}
 

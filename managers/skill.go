@@ -18,7 +18,7 @@ type SkillManager interface {
 	// Skill Group
 	CreateGroup(inputData *common.SkillGroupCreationInput) (*models.SkillGroup, error)
 	ListGroup() ([]models.SkillGroup, error)
-	GetGroup(id string) (models.SkillGroup, error)
+	GetGroup(id string) (*models.SkillGroup, error)
 	UpdateGroup(id string, inputData *common.SkillGroupUpdateInput) (*models.SkillGroup, error)
 	DeleteGroup(id string) error
 }
@@ -60,18 +60,26 @@ func (skillMgr *skillManager) Get(id string) (models.Skill, error) {
 }
 
 func (skillMgr *skillManager) Update(id string, inputData *common.SkillUpdateInput) (*models.Skill, error) {
-	skillObj := models.Skill{}
+	skillObj := &models.Skill{}
 
-	storage.DB.First(&skillObj, id)
-	storage.DB.Model(&skillObj).Updates(models.Skill{Name: inputData.Name})
+	storage.DB.First(skillObj, id)
+
+	if skillObj.ID == 0 {
+		return nil, errors.New("item does not exist")
+	}
+
+	storage.DB.Model(skillObj).Updates(models.Skill{Name: inputData.Name})
 	// TODO: handle errors
-	return &skillObj, nil
+	return skillObj, nil
 }
 
 func (skillMgr *skillManager) Delete(id string) error {
 	skillObj := models.Skill{}
 
 	storage.DB.First(&skillObj, id)
+	if skillObj.ID == 0 {
+		return errors.New("item does not exist")
+	}
 	storage.DB.Delete(&skillObj)
 	// TODO: handle errors
 	return nil
@@ -96,27 +104,40 @@ func (skillMgr *skillManager) ListGroup() ([]models.SkillGroup, error) {
 	return skillGroupObj, nil
 }
 
-func (skillMgr *skillManager) GetGroup(id string) (models.SkillGroup, error) {
-	skillGroupObj := models.SkillGroup{}
+func (skillMgr *skillManager) GetGroup(id string) (*models.SkillGroup, error) {
+	skillGroupObj := &models.SkillGroup{}
 
-	storage.DB.First(&skillGroupObj, id)
+	storage.DB.First(skillGroupObj, id)
+
+	if skillGroupObj.ID == 0 {
+		return nil, errors.New("item does not exist")
+	}
 
 	return skillGroupObj, nil
 }
 
 func (skillMgr *skillManager) UpdateGroup(id string, inputData *common.SkillGroupUpdateInput) (*models.SkillGroup, error) {
-	skillGroupObj := models.SkillGroup{}
+	skillGroupObj := &models.SkillGroup{}
 
-	storage.DB.First(&skillGroupObj, id)
+	storage.DB.First(skillGroupObj, id)
+
+	if skillGroupObj.ID == 0 {
+		return nil, errors.New("item does not exist")
+	}
+
 	storage.DB.Model(&skillGroupObj).Updates(models.Skill{Name: inputData.Name})
 	// TODO: handle errors
-	return &skillGroupObj, nil
+	return skillGroupObj, nil
 }
 
 func (skillMgr *skillManager) DeleteGroup(id string) error {
 	skillGroupObj := models.SkillGroup{}
 
 	storage.DB.First(&skillGroupObj, id)
+
+	if skillGroupObj.ID == 0 {
+		return errors.New("item does not exist")
+	}
 	storage.DB.Delete(&skillGroupObj)
 	// TODO: handle errors
 	return nil
