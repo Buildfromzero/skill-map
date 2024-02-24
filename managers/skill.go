@@ -104,7 +104,6 @@ func (skillMgr *skillManager) CreateGroup(inputData *common.SkillGroupCreationIn
 func (skillMgr *skillManager) ListGroup() ([]models.SkillGroup, error) {
 	skillGroups := []models.SkillGroup{}
 
-	// storage.DB.Find(&skillGroupObj)
 	storage.DB.Model(&skillGroups).Preload("Skills").Find(&skillGroups)
 	// TODO: handle errors
 	return skillGroups, nil
@@ -113,6 +112,7 @@ func (skillMgr *skillManager) ListGroup() ([]models.SkillGroup, error) {
 func (skillMgr *skillManager) GetGroup(id string) (*models.SkillGroup, error) {
 	skillGroupObj := models.NewSkillGroup()
 
+	storage.DB.First(skillGroupObj, id)
 	storage.DB.Model(skillGroupObj).Preload("Skills").Find(skillGroupObj)
 
 	if skillGroupObj.ID == 0 {

@@ -19,6 +19,6 @@ func InitializeDatabase() {
 		&models.User{},
 		&models.Skill{},
 		&models.SkillGroup{},
-		&models.UserSkillRank{},
+		&models.Competence{},
 	)
 }

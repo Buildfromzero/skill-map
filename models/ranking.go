@@ -6,18 +6,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserSkillRank struct {
+type Competence struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
 	CreatedAt time.Time      `json:"createdAt"`
 	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-	UserID    int
-	User      User
-	SkillID   int
-	Skill     Skill
-	Rank      uint `json:"rank"`
+	UserID    int            `json:"-"`
+	User      User           `json:"-"`
+	SkillID   int            `json:"-"`
+	Skill     Skill          `json:"skill"`
+	Rank      int            `json:"rank"`
 }
 
-func NewUserSkillRank() *UserSkillRank {
-	return &UserSkillRank{}
+func NewCompetence() *Competence {
+	return &Competence{}
 }
