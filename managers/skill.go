@@ -2,7 +2,6 @@ package managers
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/buildfromzero/skill-map/common"
 	"github.com/buildfromzero/skill-map/models"
@@ -35,6 +34,12 @@ func NewSkillManager() SkillManager {
 
 func (skillMgr *skillManager) Create(inputData *common.SkillCreationInput) (*models.Skill, error) {
 	newSkillObj := &models.Skill{Name: inputData.Name}
+
+	skillGroup := models.NewSkillGroup()
+
+	storage.DB.First(skillGroup, inputData.Group)
+	newSkillObj.SkillGroup = *skillGroup
+
 	storage.DB.Create(newSkillObj)
 
 	if newSkillObj.ID == 0 {
@@ -113,7 +118,7 @@ func (skillMgr *skillManager) GetGroup(id string) (*models.SkillGroup, error) {
 	skillGroupObj := models.NewSkillGroup()
 
 	storage.DB.First(skillGroupObj, id)
-	storage.DB.Model(skillGroupObj).Preload("Skills").Find(skillGroupObj)
+	// storage.DB.Model(skillGroupObj).Preload("Skills").Find(skillGroupObj)
 
 	if skillGroupObj.ID == 0 {
 		return nil, errors.New("item does not exist")
@@ -132,33 +137,33 @@ func (skillMgr *skillManager) UpdateGroup(id string, inputData *common.SkillGrou
 		return nil, errors.New("item does not exist")
 	}
 
-	skillMapping, err := skillMgr.getSkillList(inputData.Skills)
+	// skillMapping, err := skillMgr.getSkillList(inputData.Skills)
 
-	if err != nil {
-		return nil, err
-	}
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	storage.DB.Model(skillGroupObj).Updates(models.Skill{Name: inputData.Name})
-	storage.DB.Model(skillGroupObj).Association("Skills").Replace(skillMapping)
+	// storage.DB.Model(skillGroupObj).Association("Skills").Replace(skillMapping)
 	// TODO: handle errors
 	return skillGroupObj, nil
 }
 
-func (skillMgr *skillManager) getSkillList(inputList []int) ([]*models.Skill, error) {
+// func (skillMgr *skillManager) getSkillList(inputList []int) ([]*models.Skill, error) {
 
-	skills := []*models.Skill{}
+// 	skills := []*models.Skill{}
 
-	for _, id := range inputList {
-		skill := models.NewSkill()
-		storage.DB.First(skill, id)
-		if skill.ID == 0 {
-			return nil, fmt.Errorf("skill with id %v not exists", id)
-		}
-		skills = append(skills, skill)
-	}
+// 	for _, id := range inputList {
+// 		skill := models.NewSkill()
+// 		storage.DB.First(skill, id)
+// 		if skill.ID == 0 {
+// 			return nil, fmt.Errorf("skill with id %v not exists", id)
+// 		}
+// 		skills = append(skills, skill)
+// 	}
 
-	return skills, nil
-}
+// 	return skills, nil
+// }
 
 func (skillMgr *skillManager) DeleteGroup(id string) error {
 	skillGroupObj := models.NewSkillGroup()
