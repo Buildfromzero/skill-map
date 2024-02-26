@@ -111,5 +111,5 @@ func (userMgr *userManager) AddNewSkill(userId string, inputData *common.Compete
 }
 
 func (userMgr *userManager) prefetchUser(user *models.User) {
-	storage.DB.Model(user).Preload("Competence").Preload("Competence.Skill").Find(user)
+	storage.DB.Model(user).Preload("Competence").Preload("Competence.Skill").Preload("Competence.Skill.SkillGroup").Find(user)
 }

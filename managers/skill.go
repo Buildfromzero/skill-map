@@ -87,9 +87,6 @@ func (skillMgr *skillManager) Update(id string, inputData *common.SkillUpdateInp
 	skillObj.Name = inputData.Name
 
 	storage.DB.Save(skillObj)
-
-	// storage.DB.Model(skillObj).Updates(models.Skill{Name: inputData.Name})
-
 	storage.DB.Model(skillObj).Preload("SkillGroup").Find(skillObj)
 	// TODO: handle errors
 	return skillObj, nil
