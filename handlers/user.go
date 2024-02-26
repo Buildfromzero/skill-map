@@ -26,9 +26,11 @@ func (handler *UserHandler) RegisterEndpoints(r *gin.Engine) {
 
 	userGroup.GET("", handler.ListUser)
 	userGroup.POST("", handler.CreateUser)
+	userGroup.POST(":userid/skills", handler.AddSkill)
 	userGroup.GET(":userid/", handler.UserDetail)
 	userGroup.DELETE(":userid/", handler.DeleteUser)
 	userGroup.PATCH(":userid/", handler.UpdateUser)
+
 }
 
 func (handler *UserHandler) CreateUser(ctx *gin.Context) {
@@ -119,6 +121,34 @@ func (handler *UserHandler) UpdateUser(ctx *gin.Context) {
 	}
 
 	user, err := handler.userManager.Update(userId, userData)
+
+	if err != nil {
+		common.BadResponse(ctx, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
+}
+
+func (handler *UserHandler) AddSkill(ctx *gin.Context) {
+
+	userId, ok := ctx.Params.Get("userid")
+
+	if !ok {
+		common.BadResponse(ctx, "failed to delete user")
+		return
+	}
+
+	userData := common.NewCompetenceInput()
+
+	err := ctx.BindJSON(&userData)
+
+	if err != nil {
+		common.BadResponse(ctx, "failed to bind data")
+		return
+	}
+
+	user, err := handler.userManager.AddNewSkill(userId, userData)
 
 	if err != nil {
 		common.BadResponse(ctx, err.Error())

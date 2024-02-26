@@ -1,11 +1,13 @@
 package common
 
 type SkillCreationInput struct {
-	Name string `json:"name"`
+	Name  string `json:"name"`
+	Group string `json:"group"`
 }
 
 type SkillUpdateInput struct {
-	Name string `json:"name"`
+	Name  string `json:"name"`
+	Group string `json:"group"`
 }
 
 type SkillGroupCreationInput struct {

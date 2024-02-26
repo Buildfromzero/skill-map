@@ -9,11 +9,12 @@ import (
 )
 
 type UserManager interface {
-	Create(userData *common.UserCreationInput) (*models.User, error)
+	Create(inputData *common.UserCreationInput) (*models.User, error)
 	List() ([]models.User, error)
 	Get(id string) (*models.User, error)
-	Update(userId string, userData *common.UserUpdateInput) (*models.User, error)
+	Update(userId string, inputData *common.UserUpdateInput) (*models.User, error)
 	Delete(id string) error
+	AddNewSkill(userId string, inputData *common.CompetenceInput) (*models.User, error)
 }
 
 type userManager struct {
@@ -25,20 +26,21 @@ func NewUserManager() UserManager {
 	return &userManager{}
 }
 
-func (userMgr *userManager) Create(userData *common.UserCreationInput) (*models.User, error) {
-	newUser := &models.User{FullName: userData.FullName, Email: userData.Email}
+func (userMgr *userManager) Create(inputData *common.UserCreationInput) (*models.User, error) {
+	newUser := &models.User{FullName: inputData.FullName, Email: inputData.Email}
 	storage.DB.Create(newUser)
 
 	if newUser.ID == 0 {
 		return nil, errors.New("user creation failed")
 	}
 
+	userMgr.prefetchUser(newUser)
 	return newUser, nil
 }
 
 func (userMgr *userManager) List() ([]models.User, error) {
 	users := []models.User{}
-	storage.DB.Find(&users)
+	storage.DB.Preload("Competence").Preload("Competence.Skill").Find(&users)
 	return users, nil
 }
 
@@ -50,10 +52,12 @@ func (userMgr *userManager) Get(id string) (*models.User, error) {
 		return nil, errors.New("no user found")
 	}
 
+	userMgr.prefetchUser(user)
+
 	return user, nil
 }
 
-func (userMgr *userManager) Update(userId string, userData *common.UserUpdateInput) (*models.User, error) {
+func (userMgr *userManager) Update(userId string, inputData *common.UserUpdateInput) (*models.User, error) {
 
 	user := models.NewUser()
 
@@ -63,7 +67,9 @@ func (userMgr *userManager) Update(userId string, userData *common.UserUpdateInp
 		return nil, errors.New("no user found")
 	}
 
-	storage.DB.Model(&user).Updates(models.User{FullName: userData.FullName, Email: userData.Email})
+	storage.DB.Model(&user).Updates(models.User{FullName: inputData.FullName, Email: inputData.Email})
+
+	userMgr.prefetchUser(user)
 
 	return user, nil
 }
@@ -79,4 +85,31 @@ func (userMgr *userManager) Delete(id string) error {
 
 	storage.DB.Delete(user)
 	return nil
+}
+
+func (userMgr *userManager) AddNewSkill(userId string, inputData *common.CompetenceInput) (*models.User, error) {
+	user := models.NewUser()
+
+	storage.DB.First(user, userId)
+
+	if user.ID == 0 {
+		return nil, errors.New("no user found")
+	}
+
+	skill := models.NewSkill()
+
+	storage.DB.First(skill, inputData.Skill)
+
+	competenceObj := models.NewCompetence()
+	competenceObj.User = *user
+	competenceObj.Skill = *skill
+	competenceObj.Rank = inputData.Rank
+	storage.DB.Create(competenceObj)
+	userMgr.prefetchUser(user)
+
+	return user, nil
+}
+
+func (userMgr *userManager) prefetchUser(user *models.User) {
+	storage.DB.Model(user).Preload("Competence").Preload("Competence.Skill").Preload("Competence.Skill.SkillGroup").Find(user)
 }
