@@ -20,7 +20,9 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.Default())
 
-	userManger := managers.NewUserManager()
+	db := storage.NewGormDB(storage.DB)
+
+	userManger := managers.NewUserManager(db)
 	skillManger := managers.NewSkillManager()
 
 	userHandler := handlers.NewUserHandlerFrom(userManger)

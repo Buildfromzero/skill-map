@@ -18,12 +18,13 @@ type UserManager interface {
 }
 
 type userManager struct {
+	storage storage.Storagei
 	// DatabaseDriver
 	// dbClient
 }
 
-func NewUserManager() UserManager {
-	return &userManager{}
+func NewUserManager(storage storage.Storagei) UserManager {
+	return &userManager{storage}
 }
 
 func (userMgr *userManager) Create(inputData *common.UserCreationInput) (*models.User, error) {
@@ -46,8 +47,9 @@ func (userMgr *userManager) List() ([]models.User, error) {
 
 func (userMgr *userManager) Get(id string) (*models.User, error) {
 	user := models.NewUser()
+	userMgr.storage.GetItem(id, user)
 
-	storage.DB.First(&user, id)
+	// storage.DB.First(&user, id)
 	if user.ID == 0 {
 		return nil, errors.New("no user found")
 	}
